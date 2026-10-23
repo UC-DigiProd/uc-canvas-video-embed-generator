@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Canvas video embed code generator | Learning and Teaching, University of Canberra</title>
+
+  <title>Canvas Video Embed Code Generator | University of Canberra</title>
+
   <meta
     name="description"
-    content="Generate accessible, responsive Canvas embed code for Echo360, YouTube, Kanopy and ClickView videos."
+    content="Generate accessible, responsive Canvas video embed code for Echo360, YouTube, Kanopy and ClickView."
   >
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,9 +97,15 @@
       margin-top: 0;
     }
 
-    .meta {
+    .meta,
+    .hint,
+    .required-note {
       color: #304f5e;
       font-size: 0.9375rem;
+    }
+
+    .required-note {
+      margin-top: 0;
     }
 
     .panel {
@@ -120,16 +128,6 @@
       display: block;
       margin: 0 0 0.375rem;
       font-weight: 700;
-    }
-
-    .required-note,
-    .hint {
-      color: #304f5e;
-      font-size: 0.9375rem;
-    }
-
-    .required-note {
-      margin-top: 0;
     }
 
     .required-marker {
@@ -261,12 +259,8 @@
       min-height: 1.5em;
       margin: 1rem 0 0;
       padding-left: 0.75rem;
-      border-left: 0.25rem solid var(--uc-blue);
+      border-left: 0.25rem solid transparent;
       font-weight: 500;
-    }
-
-    .status:empty {
-      border-left-color: transparent;
     }
 
     .status[data-state="error"] {
@@ -311,20 +305,22 @@
 <body>
   <header class="site-header">
     <div class="site-header__inner">
-      <p>Learning and Teaching, University of Canberra</p>
+      <p>University of Canberra</p>
     </div>
   </header>
 
   <main>
-    <h1>Canvas video embed code generator</h1>
+    <h1>Canvas Video Embed Code Generator</h1>
 
     <p class="intro">
-      Generate responsive HTML for the Canvas HTML editor from an Echo360
+      Generate responsive HTML for the Canvas HTML Editor from an Echo360
       LTI embed, YouTube URL, Kanopy URL or ClickView embed. Generated
       players require the viewer to start playback.
     </p>
 
-    <p class="meta">Last updated: 23 October 2026 by Hollie Herne</p>
+    <p class="meta">
+      Last updated: 23 October 2026
+    </p>
 
     <form id="generatorForm" class="panel" novalidate>
       <p class="required-note">
@@ -398,7 +394,11 @@
           iframe title and source attribution.
         </p>
 
-        <p id="videoTitleError" class="field-error" hidden></p>
+        <p
+          id="videoTitleError"
+          class="field-error"
+          hidden
+        ></p>
       </div>
 
       <div class="field">
@@ -411,7 +411,7 @@
           id="source"
           name="source"
           type="text"
-          autocomplete="organization"
+          autocomplete="off"
           required
           aria-describedby="sourceHint sourceError"
         >
@@ -421,7 +421,11 @@
           creator or production source.
         </p>
 
-        <p id="sourceError" class="field-error" hidden></p>
+        <p
+          id="sourceError"
+          class="field-error"
+          hidden
+        ></p>
       </div>
 
       <div class="field">
@@ -445,11 +449,19 @@
           Enter a four-digit year from 1888 to next calendar year.
         </p>
 
-        <p id="yearError" class="field-error" hidden></p>
+        <p
+          id="yearError"
+          class="field-error"
+          hidden
+        ></p>
       </div>
 
       <div class="field">
-        <label id="mediaInputLabel" class="field-label" for="mediaInput">
+        <label
+          id="mediaInputLabel"
+          class="field-label"
+          for="mediaInput"
+        >
           Echo360 LTI iframe
           <span class="required-marker" aria-hidden="true">*</span>
         </label>
@@ -468,11 +480,17 @@
           accepted.
         </p>
 
-        <p id="mediaInputError" class="field-error" hidden></p>
+        <p
+          id="mediaInputError"
+          class="field-error"
+          hidden
+        ></p>
       </div>
 
       <div class="button-row">
-        <button type="submit">Generate HTML code</button>
+        <button type="submit">
+          Generate HTML code
+        </button>
 
         <button
           id="resetButton"
@@ -494,8 +512,11 @@
       <section id="outputSection" hidden>
         <h2>Generated Canvas HTML</h2>
 
-        <label class="field-label" for="outputCode">
-          Copy and paste this plain text into the Canvas HTML editor
+        <label
+          class="field-label"
+          for="outputCode"
+        >
+          Copy and paste this plain text into the Canvas HTML Editor
         </label>
 
         <textarea
@@ -505,7 +526,10 @@
         ></textarea>
 
         <div class="button-row">
-          <button id="copyButton" type="button">
+          <button
+            id="copyButton"
+            type="button"
+          >
             Copy code to clipboard
           </button>
         </div>
@@ -516,15 +540,32 @@
   <script>
     "use strict";
 
-    const form = document.getElementById("generatorForm");
-    const mediaInput = document.getElementById("mediaInput");
-    const mediaInputLabel = document.getElementById("mediaInputLabel");
-    const mediaInputHint = document.getElementById("mediaInputHint");
-    const outputSection = document.getElementById("outputSection");
-    const outputCode = document.getElementById("outputCode");
-    const copyButton = document.getElementById("copyButton");
-    const resetButton = document.getElementById("resetButton");
-    const statusRegion = document.getElementById("status");
+    const form =
+      document.getElementById("generatorForm");
+
+    const mediaInput =
+      document.getElementById("mediaInput");
+
+    const mediaInputLabel =
+      document.getElementById("mediaInputLabel");
+
+    const mediaInputHint =
+      document.getElementById("mediaInputHint");
+
+    const outputSection =
+      document.getElementById("outputSection");
+
+    const outputCode =
+      document.getElementById("outputCode");
+
+    const copyButton =
+      document.getElementById("copyButton");
+
+    const resetButton =
+      document.getElementById("resetButton");
+
+    const statusRegion =
+      document.getElementById("status");
 
     let copyButtonTimer;
 
@@ -536,34 +577,33 @@
           "the Echo360 LTI embed tool in Canvas. Public Echo links and " +
           "embeds requesting autoplay are not accepted.",
         placeholder:
-          '<iframe class="lti-embed" src="https://…"></iframe>'
+          '<iframe src="https://..."></iframe>'
       },
 
       youtube: {
         label: "YouTube URL",
         hint:
-          "Paste a youtube.com watch or embed URL, or a youtu.be share " +
-          "URL. URLs requesting autoplay are not accepted.",
+          "Paste a youtube.com watch or embed URL, or a youtu.be " +
+          "share URL. URLs requesting autoplay are not accepted.",
         placeholder:
           "https://www.youtube.com/watch?v=Uvoios7frIs"
       },
 
       kanopy: {
-        label: "Kanopy embed, embed URL or watch URL",
+        label: "Kanopy video, embed URL or watch URL",
         hint:
-          "Paste a Kanopy iframe or an HTTPS Kanopy embed or watch URL, " +
-          "such as /en/canberra/watch/video/15799277. URLs requesting " +
-          "autoplay are not accepted.",
+          "Paste a Kanopy iframe or HTTPS Kanopy video, embed or " +
+          "watch URL. URLs requesting autoplay are not accepted.",
         placeholder:
-          "https://www.kanopy.com/en/canberra/watch/video/15799277"
+          "https://www.kanopy.com/en/canberra/video/15799277"
       },
 
       clickview: {
         label: "ClickView embed or player URL",
         hint:
           "Paste the complete responsive embed snippet or an approved " +
-          "HTTPS ClickView share or player URL. URLs requesting autoplay " +
-          "are not accepted.",
+          "HTTPS ClickView share or player URL. URLs requesting " +
+          "autoplay are not accepted.",
         placeholder:
           "https://clickv.ie/w/hoO6buu"
       }
@@ -574,23 +614,37 @@
     }
 
     function updateInterface() {
-      const config = platformConfig[selectedMediaType()];
+      const config =
+        platformConfig[selectedMediaType()];
 
       mediaInputLabel.textContent = "";
 
       mediaInputLabel.append(
-        document.createTextNode(config.label + " ")
+        document.createTextNode(
+          config.label + " "
+        )
       );
 
-      const marker = document.createElement("span");
-      marker.className = "required-marker";
-      marker.setAttribute("aria-hidden", "true");
+      const marker =
+        document.createElement("span");
+
+      marker.className =
+        "required-marker";
+
+      marker.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
       marker.textContent = "*";
 
       mediaInputLabel.append(marker);
 
-      mediaInputHint.textContent = config.hint;
-      mediaInput.placeholder = config.placeholder;
+      mediaInputHint.textContent =
+        config.hint;
+
+      mediaInput.placeholder =
+        config.placeholder;
 
       clearFieldError(mediaInput);
       setStatus("");
@@ -600,14 +654,18 @@
       return String(value)
         .replace(
           /&#(\d+);/g,
-          function replaceDecimalEntity(match, number) {
-            return String.fromCodePoint(Number(number));
+          function (match, number) {
+            return String.fromCodePoint(
+              Number(number)
+            );
           }
         )
         .replace(
           /&#x([0-9a-f]+);/gi,
-          function replaceHexEntity(match, number) {
-            return String.fromCodePoint(parseInt(number, 16));
+          function (match, number) {
+            return String.fromCodePoint(
+              parseInt(number, 16)
+            );
           }
         )
         .replace(/&quot;/gi, '"')
@@ -618,52 +676,86 @@
     }
 
     function extractUrlFromInput(rawInput) {
-      const text = rawInput.trim();
+      const text =
+        rawInput.trim();
 
       if (!text) {
         return null;
       }
 
-      const parsed = new DOMParser().parseFromString(
-        text,
-        "text/html"
-      );
+      /*
+       * Parse pasted markup in a separate document.
+       * User-supplied HTML is never inserted into
+       * the live generator page.
+       */
+      const parsed =
+        new DOMParser().parseFromString(
+          text,
+          "text/html"
+        );
 
-      const iframe = parsed.querySelector("iframe[src]");
+      const iframe =
+        parsed.querySelector("iframe[src]");
 
       if (iframe) {
-        const src = iframe.getAttribute("src");
+        const src =
+          iframe.getAttribute("src");
 
         if (src) {
-          return decodeHtmlEntities(src.trim());
+          return decodeHtmlEntities(
+            src.trim()
+          );
         }
       }
 
-      const anchor = parsed.querySelector("a[href]");
+      /*
+       * Rich-text applications may wrap a pasted
+       * URL in an anchor element.
+       */
+      const anchor =
+        parsed.querySelector("a[href]");
 
       if (anchor) {
-        const href = anchor.getAttribute("href");
+        const href =
+          anchor.getAttribute("href");
 
         if (href) {
-          return decodeHtmlEntities(href.trim());
+          return decodeHtmlEntities(
+            href.trim()
+          );
         }
       }
 
-      const decoded = decodeHtmlEntities(text);
-      const matches = decoded.match(/https:\/\/[^\s<>"']+/gi);
+      const decoded =
+        decodeHtmlEntities(text);
+
+      const matches =
+        decoded.match(
+          /https:\/\/[^\s<>"']+/gi
+        );
 
       if (matches) {
-        return matches[0].replace(/[),.;]+$/, "");
+        return matches[0].replace(
+          /[),.;]+$/,
+          ""
+        );
       }
 
       return decoded;
     }
 
     function parseHttpsUrl(candidate) {
-      try {
-        const url = new URL(candidate);
+      if (!candidate) {
+        return null;
+      }
 
-        if (url.protocol !== "https:") {
+      try {
+        const url =
+          new URL(candidate);
+
+        if (
+          url.protocol !== "https:"
+        ) {
           return null;
         }
 
@@ -673,24 +765,58 @@
       }
     }
 
-    function hostMatches(hostname, allowedHosts) {
-      const host = hostname.toLowerCase();
+    function hostMatches(
+      hostname,
+      allowedHosts
+    ) {
+      const host =
+        hostname.toLowerCase();
 
-      return allowedHosts.some(function matchesHost(allowedHost) {
-        return (
-          host === allowedHost ||
-          host.endsWith("." + allowedHost)
-        );
-      });
+      return allowedHosts.some(
+        function (allowedHost) {
+          return (
+            host === allowedHost ||
+            host.endsWith(
+              "." + allowedHost
+            )
+          );
+        }
+      );
+    }
+
+    function isAllowedYouTubeHost(
+      hostname
+    ) {
+      const allowedHosts = [
+        "youtube.com",
+        "www.youtube.com",
+        "m.youtube.com",
+        "youtu.be",
+        "youtube-nocookie.com",
+        "www.youtube-nocookie.com"
+      ];
+
+      return allowedHosts.includes(
+        hostname.toLowerCase()
+      );
     }
 
     function rejectAutoplayRequest(url) {
-      const autoplayValue = url.searchParams.get("autoplay");
+      const autoplayValues =
+        url.searchParams.getAll(
+          "autoplay"
+        );
 
-      if (
-        autoplayValue &&
-        /^(1|true|yes)$/i.test(autoplayValue.trim())
-      ) {
+      const autoplayRequested =
+        autoplayValues.some(
+          function (value) {
+            return /^(1|true|yes)$/i.test(
+              value.trim()
+            );
+          }
+        );
+
+      if (autoplayRequested) {
         throw new Error(
           "Autoplay is not supported. Remove the autoplay setting " +
           "and paste the URL or embed again."
@@ -699,69 +825,109 @@
     }
 
     function parseEchoInput(rawInput) {
-      const parsed = new DOMParser().parseFromString(
-        rawInput,
-        "text/html"
-      );
+      const parsed =
+        new DOMParser().parseFromString(
+          rawInput,
+          "text/html"
+        );
 
-      const iframe = parsed.querySelector("iframe[src]");
+      const iframe =
+        parsed.querySelector(
+          "iframe[src]"
+        );
 
       if (!iframe) {
-        throw new Error("Paste an Echo360 LTI iframe.");
+        throw new Error(
+          "Paste an Echo360 LTI iframe."
+        );
       }
 
-      const srcValue = decodeHtmlEntities(
-        iframe.getAttribute("src") || ""
-      ).trim();
+      const sourceValue =
+        decodeHtmlEntities(
+          iframe.getAttribute("src") ||
+          ""
+        ).trim();
 
-      const src = parseHttpsUrl(srcValue);
+      const sourceUrl =
+        parseHttpsUrl(
+          sourceValue
+        );
 
-      if (!src) {
+      if (!sourceUrl) {
         throw new Error(
           "The Echo360 iframe must contain a valid HTTPS source URL."
         );
       }
 
-      rejectAutoplayRequest(src);
+      rejectAutoplayRequest(
+        sourceUrl
+      );
 
-      const publicSignal = (
-        src.pathname + src.search
-      ).toLowerCase();
+      const publicSignal =
+        (
+          sourceUrl.pathname +
+          sourceUrl.search
+        ).toLowerCase();
 
       if (
-        /(^|[/?&=_-])public([/?&=_-]|$)/.test(publicSignal)
+        /(^|[/?&=_-])public([/?&=_-]|$)/
+          .test(publicSignal)
       ) {
         throw new Error(
-          "Echo360 public links are not accepted. Paste the iframe " +
-          "from the Echo360 LTI embed tool in Canvas."
+          "Echo360 public links are not accepted. " +
+          "Paste the iframe from the Echo360 LTI embed tool in Canvas."
         );
       }
 
       return {
-        embedUrl: src.href,
-        attributionUrl: src.href,
-        ratioStyle: "padding-top: calc(56.25% + 56px);",
-        iframeTitlePrefix: "Echo video: ",
+        /*
+         * Preserve the LTI URL rather than reconstructing it.
+         */
+        embedUrl:
+          sourceUrl.href,
 
-        // Autoplay is intentionally not granted.
+        attributionUrl:
+          sourceUrl.href,
+
+        /*
+         * Echo requires additional vertical space
+         * for its player interface.
+         */
+        ratioStyle:
+          "padding-top: calc(56.25% + 56px);",
+
+        iframeTitlePrefix:
+          "Echo video: ",
+
+        /*
+         * Autoplay permission is deliberately omitted.
+         */
         allow:
           "encrypted-media; picture-in-picture; fullscreen",
 
-        externalText: ""
+        externalText:
+          ""
       };
     }
 
-    function parseYouTubeInput(rawInput) {
-      const candidate = extractUrlFromInput(rawInput);
-      const url = parseHttpsUrl(candidate);
+    function parseYouTubeInput(
+      rawInput
+    ) {
+      const candidate =
+        extractUrlFromInput(
+          rawInput
+        );
+
+      const url =
+        parseHttpsUrl(
+          candidate
+        );
 
       if (
         !url ||
-        !hostMatches(url.hostname, [
-          "youtube.com",
-          "youtu.be",
-          "youtube-nocookie.com"
-        ])
+        !isAllowedYouTubeHost(
+          url.hostname
+        )
       ) {
         throw new Error(
           "Enter a valid HTTPS YouTube watch, share or embed URL."
@@ -771,29 +937,49 @@
       rejectAutoplayRequest(url);
 
       let videoId = "";
-      const host = url.hostname
-        .toLowerCase()
-        .replace(/^www\./, "");
 
-      if (host === "youtu.be") {
+      const host =
+        url.hostname
+          .toLowerCase()
+          .replace(
+            /^www\./,
+            ""
+          );
+
+      if (
+        host === "youtu.be"
+      ) {
         videoId =
-          url.pathname.split("/").filter(Boolean)[0] || "";
-      } else if (url.pathname === "/watch") {
-        videoId = url.searchParams.get("v") || "";
+          url.pathname
+            .split("/")
+            .filter(Boolean)[0] ||
+          "";
+      } else if (
+        url.pathname === "/watch"
+      ) {
+        videoId =
+          url.searchParams.get("v") ||
+          "";
       } else {
-        const pathParts = url.pathname
-          .split("/")
-          .filter(Boolean);
+        const pathParts =
+          url.pathname
+            .split("/")
+            .filter(Boolean);
 
         if (
-          pathParts[0] === "embed" ||
-          pathParts[0] === "shorts"
+          pathParts[0] ===
+          "embed"
         ) {
-          videoId = pathParts[1] || "";
+          videoId =
+            pathParts[1] ||
+            "";
         }
       }
 
-      if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
+      if (
+        !/^[A-Za-z0-9_-]{11}$/
+          .test(videoId)
+      ) {
         throw new Error(
           "Enter a valid YouTube URL containing an " +
           "11-character video ID."
@@ -802,51 +988,90 @@
 
       return {
         embedUrl:
-          "https://www.youtube.com/embed/" + videoId,
+          "https://www.youtube.com/embed/" +
+          videoId,
 
         attributionUrl:
-          "https://www.youtube.com/watch?v=" + videoId,
+          "https://www.youtube.com/watch?v=" +
+          videoId,
 
-        ratioStyle: "padding-top: 56.25%;",
-        iframeTitlePrefix: "YouTube video: ",
+        ratioStyle:
+          "padding-top: 56.25%;",
 
-        // Autoplay and unrelated device permissions are omitted.
+        iframeTitlePrefix:
+          "YouTube video: ",
+
+        /*
+         * Autoplay and unrelated device permissions
+         * are deliberately omitted.
+         */
         allow:
           "encrypted-media; picture-in-picture; fullscreen",
 
-        externalText: " – watch on YouTube"
+        externalText:
+          " – watch on YouTube"
       };
     }
 
-    function parseKanopyInput(rawInput) {
-      const candidate = extractUrlFromInput(rawInput);
-      const url = parseHttpsUrl(candidate);
+    function parseKanopyInput(
+      rawInput
+    ) {
+      const candidate =
+        extractUrlFromInput(
+          rawInput
+        );
+
+      const url =
+        parseHttpsUrl(
+          candidate
+        );
 
       if (
         !url ||
-        !hostMatches(url.hostname, ["kanopy.com"])
+        !hostMatches(
+          url.hostname,
+          ["kanopy.com"]
+        )
       ) {
         throw new Error(
-          "Enter a valid HTTPS Kanopy embed or watch URL."
+          "Enter a valid HTTPS Kanopy video, embed or watch URL."
         );
       }
 
       rejectAutoplayRequest(url);
 
-      const match = url.pathname.match(
-        /^(\/[^?#]*?\/)(?:embed|watch)\/video\/(\d+)\/?$/i
-      );
+      /*
+       * Supported Kanopy paths:
+       *
+       * /en/canberra/video/15799277
+       * /en/canberra/watch/video/15799277
+       * /en/canberra/embed/video/15799277
+       *
+       * The institution path is retained when
+       * constructing the canonical URLs.
+       */
+      const match =
+        url.pathname.match(
+          /^(\/[^?#]*?\/)(?:(?:embed|watch)\/)?video\/(\d+)\/?$/i
+        );
 
       if (!match) {
         throw new Error(
-          "Enter a valid Kanopy URL ending in " +
-          "/embed/video/{number} or /watch/video/{number}."
+          "Enter a valid Kanopy video, embed or watch URL."
         );
       }
 
-      const institutionPath = match[1].replace(/\/+$/, "");
-      const videoId = match[2];
-      const origin = url.origin;
+      const institutionPath =
+        match[1].replace(
+          /\/+$/,
+          ""
+        );
+
+      const videoId =
+        match[2];
+
+      const origin =
+        url.origin;
 
       return {
         embedUrl:
@@ -861,19 +1086,39 @@
           "/watch/video/" +
           videoId,
 
-        ratioStyle: "padding-top: 60.9375%;",
-        iframeTitlePrefix: "Kanopy video: ",
+        /*
+         * Kanopy's supplied 640 × 390 player ratio:
+         * 390 / 640 × 100 = 60.9375%.
+         */
+        ratioStyle:
+          "padding-top: 60.9375%;",
 
-        // Kanopy does not receive autoplay permission.
-        allow: "encrypted-media; fullscreen",
+        iframeTitlePrefix:
+          "Kanopy video: ",
 
-        externalText: " – watch on Kanopy"
+        /*
+         * Autoplay permission is deliberately omitted.
+         */
+        allow:
+          "encrypted-media; fullscreen",
+
+        externalText:
+          " – watch on Kanopy"
       };
     }
 
-    function parseClickViewInput(rawInput) {
-      const candidate = extractUrlFromInput(rawInput);
-      const url = parseHttpsUrl(candidate);
+    function parseClickViewInput(
+      rawInput
+    ) {
+      const candidate =
+        extractUrlFromInput(
+          rawInput
+        );
+
+      const url =
+        parseHttpsUrl(
+          candidate
+        );
 
       const allowedHosts = [
         "clickv.ie",
@@ -883,7 +1128,10 @@
 
       if (
         !url ||
-        !hostMatches(url.hostname, allowedHosts)
+        !hostMatches(
+          url.hostname,
+          allowedHosts
+        )
       ) {
         throw new Error(
           "Enter a valid HTTPS ClickView embed or player URL " +
@@ -893,15 +1141,19 @@
 
       rejectAutoplayRequest(url);
 
-      const pathParts = url.pathname
-        .split("/")
-        .filter(Boolean);
+      const pathParts =
+        url.pathname
+          .split("/")
+          .filter(Boolean);
 
       const identifier =
-        pathParts[pathParts.length - 1] || "";
+        pathParts[
+          pathParts.length - 1
+        ] || "";
 
       if (
-        !/^[A-Za-z0-9_-]+$/.test(identifier) ||
+        !/^[A-Za-z0-9_-]+$/
+          .test(identifier) ||
         identifier.length < 3
       ) {
         throw new Error(
@@ -910,27 +1162,59 @@
       }
 
       return {
-        embedUrl: url.href,
-        attributionUrl: url.href,
-        ratioStyle: "padding-top: 56.25%;",
-        iframeTitlePrefix: "ClickView video: ",
+        embedUrl:
+          url.href,
 
-        // Autoplay is intentionally not granted.
-        allow: "fullscreen",
+        attributionUrl:
+          url.href,
 
-        externalText: " – watch on ClickView"
+        ratioStyle:
+          "padding-top: 56.25%;",
+
+        iframeTitlePrefix:
+          "ClickView video: ",
+
+        /*
+         * Autoplay permission is deliberately omitted.
+         */
+        allow:
+          "fullscreen",
+
+        externalText:
+          " – watch on ClickView"
       };
     }
 
-    function parseMediaInput(type, rawInput) {
+    function parseMediaInput(
+      type,
+      rawInput
+    ) {
       const parsers = {
-        echo: parseEchoInput,
-        youtube: parseYouTubeInput,
-        kanopy: parseKanopyInput,
-        clickview: parseClickViewInput
+        echo:
+          parseEchoInput,
+
+        youtube:
+          parseYouTubeInput,
+
+        kanopy:
+          parseKanopyInput,
+
+        clickview:
+          parseClickViewInput
       };
 
-      return parsersrawInput;
+      const parser =
+        parsers[type];
+
+      if (!parser) {
+        throw new Error(
+          "Select a supported media source."
+        );
+      }
+
+      return parser(
+        rawInput
+      );
     }
 
     function escapeHtml(value) {
@@ -944,49 +1228,68 @@
 
       return String(value).replace(
         /[&<>'"]/g,
-        function replaceCharacter(character) {
-          return characterMap[character];
+        function (character) {
+          return characterMap[
+            character
+          ];
         }
       );
     }
 
-    function buildPlayerHtml(media, title) {
-      const iframeTitle = escapeHtml(
-        media.iframeTitlePrefix + title
-      );
+    function buildPlayerHtml(
+      media,
+      title
+    ) {
+      const iframeTitle =
+        escapeHtml(
+          media.iframeTitlePrefix +
+          title
+        );
 
-      const src = escapeHtml(media.embedUrl);
-      const allow = escapeHtml(media.allow);
+      const src =
+        escapeHtml(
+          media.embedUrl
+        );
+
+      const allow =
+        escapeHtml(
+          media.allow
+        );
 
       /*
-       * Canvas currently permits div and iframe elements, global style
-       * and title attributes, and iframe src, allow and allowfullscreen.
+       * Generated Canvas HTML is deliberately minimal.
        *
-       * Autoplay permission is deliberately excluded. No autoplay URL
-       * parameter is generated.
+       * Autoplay permission is not included and no
+       * autoplay URL parameter is generated.
        */
       return (
-        '<div style="max-width: 704px; width: 100%; ' +
-        'margin: 0 auto;">\n' +
-        '  <div style="position: relative; width: 100%; ' +
-        'height: 0; ' +
+        '<div style="max-width: 704px; width: 100%; margin: 0 auto;">\n' +
+
+        '  <div style="position: relative; width: 100%; height: 0; ' +
         media.ratioStyle +
         '">\n' +
-        '    <iframe style="position: absolute; top: 0; ' +
-        'left: 0; width: 100%; height: 100%; ' +
-        'border: 1px solid #607782;" ' +
+
+        '    <iframe ' +
+        'style="position: absolute; top: 0; left: 0; ' +
+        'width: 100%; height: 100%; border: 1px solid #607782;" ' +
+
         'src="' +
         src +
         '" ' +
+
         'title="' +
         iframeTitle +
         '" ' +
+
         'allow="' +
         allow +
         '" ' +
-        "allowfullscreen></iframe>\n" +
-        "  </div>\n" +
-        "</div>"
+
+        'allowfullscreen>' +
+        '</iframe>\n' +
+
+        '  </div>\n' +
+        '</div>'
       );
     }
 
@@ -996,35 +1299,54 @@
       source,
       year
     ) {
-      const linkText = escapeHtml(
-        title + media.externalText
-      );
+      const linkText =
+        escapeHtml(
+          title +
+          media.externalText
+        );
 
-      const href = escapeHtml(media.attributionUrl);
+      const href =
+        escapeHtml(
+          media.attributionUrl
+        );
 
       return (
         '<p style="text-align: center; margin-top: 12px;">' +
-        "Source: " +
+
+        'Source: ' +
+
         '<a href="' +
         href +
         '">' +
-        "<em>" +
+
+        '<em>' +
         linkText +
-        "</em>" +
-        "</a> " +
-        "(" +
+        '</em>' +
+
+        '</a> ' +
+
+        '(' +
         escapeHtml(source) +
-        ", " +
+        ', ' +
         escapeHtml(year) +
-        ")" +
-        "</p>"
+        ')' +
+
+        '</p>'
       );
     }
 
-    function buildGeneratedHtml(media, values) {
+    function buildGeneratedHtml(
+      media,
+      values
+    ) {
       return (
-        buildPlayerHtml(media, values.title) +
+        buildPlayerHtml(
+          media,
+          values.title
+        ) +
+
         "\n" +
+
         buildAttributionHtml(
           media,
           values.title,
@@ -1034,26 +1356,49 @@
       );
     }
 
-    function setFieldError(control, message) {
-      const error = document.getElementById(
-        control.id + "Error"
+    function setFieldError(
+      control,
+      message
+    ) {
+      const error =
+        document.getElementById(
+          control.id +
+          "Error"
+        );
+
+      control.setAttribute(
+        "aria-invalid",
+        "true"
       );
-
-      control.setAttribute("aria-invalid", "true");
-      error.textContent = message;
-      error.hidden = false;
-    }
-
-    function clearFieldError(control) {
-      const error = document.getElementById(
-        control.id + "Error"
-      );
-
-      control.removeAttribute("aria-invalid");
 
       if (error) {
-        error.textContent = "";
-        error.hidden = true;
+        error.textContent =
+          message;
+
+        error.hidden =
+          false;
+      }
+    }
+
+    function clearFieldError(
+      control
+    ) {
+      const error =
+        document.getElementById(
+          control.id +
+          "Error"
+        );
+
+      control.removeAttribute(
+        "aria-invalid"
+      );
+
+      if (error) {
+        error.textContent =
+          "";
+
+        error.hidden =
+          true;
       }
     }
 
@@ -1063,31 +1408,67 @@
         "source",
         "year",
         "mediaInput"
-      ].forEach(function clearErrorById(id) {
-        clearFieldError(document.getElementById(id));
-      });
+      ].forEach(
+        function (id) {
+          clearFieldError(
+            document.getElementById(
+              id
+            )
+          );
+        }
+      );
     }
 
-    function setStatus(message, state) {
-      statusRegion.textContent = message;
+    function setStatus(
+      message,
+      state = ""
+    ) {
+      statusRegion.textContent =
+        message;
 
       if (state) {
-        statusRegion.setAttribute("data-state", state);
+        statusRegion.setAttribute(
+          "data-state",
+          state
+        );
       } else {
-        statusRegion.removeAttribute("data-state");
+        statusRegion.removeAttribute(
+          "data-state"
+        );
       }
     }
 
     function readAndValidateForm() {
       const values = {
-        title: form.elements.videoTitle.value.trim(),
-        source: form.elements.source.value.trim(),
-        year: form.elements.year.value.trim(),
-        mediaInput: mediaInput.value.trim(),
-        type: selectedMediaType()
+        title:
+          form.elements
+            .videoTitle
+            .value
+            .trim(),
+
+        source:
+          form.elements
+            .source
+            .value
+            .trim(),
+
+        year:
+          form.elements
+            .year
+            .value
+            .trim(),
+
+        mediaInput:
+          mediaInput
+            .value
+            .trim(),
+
+        type:
+          selectedMediaType()
       };
 
-      const invalidControls = [];
+      const invalidControls =
+        [];
 
       if (!values.title) {
         setFieldError(
@@ -1095,7 +1476,9 @@
           "Enter a video title."
         );
 
-        invalidControls.push(form.elements.videoTitle);
+        invalidControls.push(
+          form.elements.videoTitle
+        );
       }
 
       if (!values.source) {
@@ -1104,16 +1487,23 @@
           "Enter the source or channel."
         );
 
-        invalidControls.push(form.elements.source);
+        invalidControls.push(
+          form.elements.source
+        );
       }
 
       const maximumYear =
-        new Date().getFullYear() + 1;
+        new Date().getFullYear() +
+        1;
 
       if (
-        !/^\d{4}$/.test(values.year) ||
-        Number(values.year) < 1888 ||
-        Number(values.year) > maximumYear
+        !/^\d{4}$/.test(
+          values.year
+        ) ||
+        Number(values.year) <
+          1888 ||
+        Number(values.year) >
+          maximumYear
       ) {
         setFieldError(
           form.elements.year,
@@ -1122,30 +1512,44 @@
           "."
         );
 
-        invalidControls.push(form.elements.year);
+        invalidControls.push(
+          form.elements.year
+        );
       }
 
       if (!values.mediaInput) {
         const messages = {
-          echo: "Paste an Echo360 LTI iframe.",
-          youtube: "Enter a valid YouTube URL.",
+          echo:
+            "Paste an Echo360 LTI iframe.",
+
+          youtube:
+            "Enter a valid YouTube URL.",
+
           kanopy:
-            "Enter a valid Kanopy embed or watch URL.",
+            "Enter a valid Kanopy video, embed or watch URL.",
+
           clickview:
             "Enter a valid ClickView embed or player URL."
         };
 
         setFieldError(
           mediaInput,
-          messages[values.type]
+          messages[
+            values.type
+          ]
         );
 
-        invalidControls.push(mediaInput);
+        invalidControls.push(
+          mediaInput
+        );
       }
 
       return {
-        values: values,
-        invalidControls: invalidControls
+        values:
+          values,
+
+        invalidControls:
+          invalidControls
       };
     }
 
@@ -1154,50 +1558,70 @@
 
       clearAllErrors();
 
-      outputSection.hidden = true;
-      outputCode.value = "";
+      outputSection.hidden =
+        true;
 
-      const validation = readAndValidateForm();
-      const values = validation.values;
+      outputCode.value =
+        "";
+
+      const validation =
+        readAndValidateForm();
+
+      const values =
+        validation.values;
+
       const invalidControls =
         validation.invalidControls;
 
-      if (invalidControls.length) {
+      if (
+        invalidControls.length
+      ) {
         setStatus(
           "Check the highlighted fields and correct the errors.",
           "error"
         );
 
-        invalidControls[0].focus();
+        invalidControls[0]
+          .focus();
+
         return;
       }
 
       try {
-        const media = parseMediaInput(
-          values.type,
-          values.mediaInput
-        );
+        const media =
+          parseMediaInput(
+            values.type,
+            values.mediaInput
+          );
 
-        outputCode.value = buildGeneratedHtml(
-          media,
-          values
-        );
+        outputCode.value =
+          buildGeneratedHtml(
+            media,
+            values
+          );
 
-        outputSection.hidden = false;
+        outputSection.hidden =
+          false;
 
         setStatus(
           "Canvas HTML generated. Review or copy the code below.",
           "success"
         );
 
+        /*
+         * The newly available result receives focus.
+         * Its contents are not automatically selected.
+         */
         outputCode.focus();
-        outputCode.select();
       } catch (error) {
-        setFieldError(
-          mediaInput,
+        const message =
           error instanceof Error
             ? error.message
-            : "Enter a valid media URL or embed."
+            : "Enter a valid media URL or embed.";
+
+        setFieldError(
+          mediaInput,
+          message
         );
 
         setStatus(
@@ -1210,22 +1634,26 @@
     }
 
     function showCopySuccess() {
-      window.clearTimeout(copyButtonTimer);
+      window.clearTimeout(
+        copyButtonTimer
+      );
 
-      copyButton.textContent = "Copied";
+      copyButton.textContent =
+        "Copied";
 
       setStatus(
         "Code copied to the clipboard.",
         "success"
       );
 
-      copyButtonTimer = window.setTimeout(
-        function restoreCopyButtonLabel() {
-          copyButton.textContent =
-            "Copy code to clipboard";
-        },
-        2000
-      );
+      copyButtonTimer =
+        window.setTimeout(
+          function () {
+            copyButton.textContent =
+              "Copy code to clipboard";
+          },
+          2000
+        );
     }
 
     function showManualCopyInstructions() {
@@ -1233,8 +1661,9 @@
       outputCode.select();
 
       setStatus(
-        "Automatic copying was unavailable. The code is selected. " +
-        "Press Ctrl+C, or Command+C on a Mac, to copy it.",
+        "Automatic copying was unavailable. " +
+        "The code is selected. Press Ctrl+C, " +
+        "or Command+C on a Mac, to copy it.",
         "error"
       );
     }
@@ -1254,16 +1683,18 @@
         window.isSecureContext
       ) {
         try {
-          await navigator.clipboard.writeText(
-            outputCode.value
-          );
+          await navigator.clipboard
+            .writeText(
+              outputCode.value
+            );
 
           showCopySuccess();
+
           return;
         } catch (error) {
           /*
-           * Continue to the browser fallback. The error is not shown
-           * because the fallback may still complete successfully.
+           * Continue to the browser fallback.
+           * Generated code remains available.
            */
         }
       }
@@ -1272,14 +1703,19 @@
       outputCode.select();
 
       try {
-        if (document.execCommand("copy")) {
+        if (
+          document.execCommand(
+            "copy"
+          )
+        ) {
           showCopySuccess();
+
           return;
         }
       } catch (error) {
         /*
-         * Keep the generated code selected so the user can copy it
-         * manually.
+         * Keep the generated code selected
+         * so it can be copied manually.
          */
       }
 
@@ -1288,19 +1724,27 @@
 
     function resetGenerator() {
       form.reset();
+
       clearAllErrors();
 
-      outputCode.value = "";
-      outputSection.hidden = true;
+      outputCode.value =
+        "";
 
-      window.clearTimeout(copyButtonTimer);
+      outputSection.hidden =
+        true;
+
+      window.clearTimeout(
+        copyButtonTimer
+      );
 
       copyButton.textContent =
         "Copy code to clipboard";
 
       updateInterface();
 
-      form.elements.videoTitle.focus();
+      form.elements
+        .videoTitle
+        .focus();
 
       setStatus(
         "Generator reset.",
@@ -1308,12 +1752,18 @@
       );
     }
 
-    form.addEventListener("submit", handleSubmit);
+    form.addEventListener(
+      "submit",
+      handleSubmit
+    );
 
     form.addEventListener(
       "change",
-      function handleFormChange(event) {
-        if (event.target.name === "mediaType") {
+      function (event) {
+        if (
+          event.target.name ===
+          "mediaType"
+        ) {
           updateInterface();
         }
       }
@@ -1324,16 +1774,20 @@
       "source",
       "year",
       "mediaInput"
-    ].forEach(function addInputListener(id) {
-      document
-        .getElementById(id)
-        .addEventListener(
-          "input",
-          function clearCurrentFieldError(event) {
-            clearFieldError(event.currentTarget);
-          }
-        );
-    });
+    ].forEach(
+      function (id) {
+        document
+          .getElementById(id)
+          .addEventListener(
+            "input",
+            function (event) {
+              clearFieldError(
+                event.currentTarget
+              );
+            }
+          );
+      }
+    );
 
     copyButton.addEventListener(
       "click",
