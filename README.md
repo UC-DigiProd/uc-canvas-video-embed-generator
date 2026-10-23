@@ -208,7 +208,3 @@ When making changes, preserve the generator's core principles:
 8. Clear source attribution.
 
 Changes affecting generated HTML should be reviewed against the current Canvas HTML Editor Allowlist and relevant WCAG 2.2 requirements before release.
-
-## Licence
-
-See `LICENSE.md` for licence information.
